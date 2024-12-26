@@ -15,6 +15,10 @@ const driveActivePlayer = function (gameTurns) {
   return currentPlayer;
 };
 function App() {
+  const [players, setPlayers] = useState({
+    X: "player 1",
+    O: "player 2",
+  });
   const [gameTurns, setGameTurns] = useState([]);
   const activePlayer = driveActivePlayer(gameTurns);
   let gameBoard = [...initialGameBoard.map((innerArray) => [...innerArray])];
@@ -33,7 +37,7 @@ function App() {
       firstSymbol === secondSymbol &&
       firstSymbol === thirdSymbol
     )
-      winner = firstSymbol;
+      winner = players[firstSymbol];
   }
   const hasDraw = gameTurns.length === 9 && !winner;
   function handleSelectedButton(rowIndex, colIndex) {
@@ -51,6 +55,12 @@ function App() {
   function gameRestart() {
     setGameTurns([]);
   }
+  function handleChangePlayerName({ symbol, newName }) {
+    setPlayers((prevPlayer) => ({
+      ...prevPlayer,
+      [symbol]: newName,
+    }));
+  }
   return (
     <main>
       <div id="game-container">
@@ -59,11 +69,13 @@ function App() {
             initilaName="Player 1"
             symbol="X"
             activePlayer={activePlayer === "X"}
+            onChangeName={handleChangePlayerName}
           />
           <Player
             initilaName="Player 2"
             symbol="O"
             activePlayer={activePlayer === "O"}
+            onChangeName={handleChangePlayerName}
           />
         </ol>
         {(winner || hasDraw) && (
